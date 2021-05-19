@@ -8,7 +8,7 @@
 #define SA struct sockaddr
 void func(int sockfd)
 {
-	char buff[MAX];
+	char buff[MAX]; // tamanho em bytes da mensagem?
 	int n;
 	for (;;) {
 		bzero(buff, sizeof(buff));
@@ -20,7 +20,7 @@ void func(int sockfd)
 		bzero(buff, sizeof(buff));
 		read(sockfd, buff, sizeof(buff));
 		printf("From Server : %s", buff);
-		if ((strncmp(buff, "exit", 4)) == 0) {
+		if ((strncmp(buff, "exit", 4)) == 0) { // substituir por shutdown?
 			printf("Client Exit...\n");
 			break;
 		}
