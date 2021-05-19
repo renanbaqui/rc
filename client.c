@@ -4,11 +4,11 @@
 #include <string.h>
 #include <sys/socket.h>
 #define MAX 80
-#define PORT 8080
+#define PORT 8080 // mudar para a porta do servidor?
 #define SA struct sockaddr
 void func(int sockfd)
 {
-	char buff[MAX]; // tamanho em bytes da mensagem?
+	char buff[MAX]; // MAX tamanho em bytes da mensagem? // subtituir por array de bytes? // definir como 'ack'?
 	int n;
 	for (;;) {
 		bzero(buff, sizeof(buff));
@@ -20,7 +20,7 @@ void func(int sockfd)
 		bzero(buff, sizeof(buff));
 		read(sockfd, buff, sizeof(buff));
 		printf("From Server : %s", buff);
-		if ((strncmp(buff, "exit", 4)) == 0) { // substituir por shutdown?
+		if ((strncmp(buff, "exit", 4)) == 0) { // substituir 'exit' por 'shutdown'?
 			printf("Client Exit...\n");
 			break;
 		}
@@ -44,7 +44,7 @@ int main()
 
 	// assign IP, PORT
 	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // mudar para o IP 152.92.236.16?
 	servaddr.sin_port = htons(PORT);
 
 	// connect the client socket to server socket
