@@ -56,7 +56,7 @@ int main()
 		printf("connected to the server..\n");
 
 	// function for chat
-	func(sockfd);
+	func(sockfd);				// loop enviando uma mensagem com um tamanho configurado, aguardando a resposta, calculando o tempo de RTT?
 
 	// close the socket
 	close(sockfd);
