@@ -57,7 +57,7 @@ int main()
 
 	// function for chat
 	func(sockfd);				// loop enviando uma mensagem com um tamanho configurado, aguardando a resposta, calculando o tempo de RTT?
-
+						// criar outro loop? - ao iniciar, o cliente fica aguardando uma mensagem de multicast do orquestrador.
 	// close the socket
 	close(sockfd);
 }
