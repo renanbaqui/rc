@@ -4,7 +4,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #define MAX 80
-#define PORT 8080 // mudar para a porta do servidor?
+#define PORT 8080 // definicao de porta
 #define SA struct sockaddr
 void func(int sockfd)
 {
@@ -32,32 +32,32 @@ int main()
 	int sockfd, connfd;
 	struct sockaddr_in servaddr, cli;
 
-	// socket create and varification
+	// criacao do socket e verificacao
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1) {
-		printf("socket creation failed...\n");
+		printf("criacao do socket falhou...\n");
 		exit(0);
 	}
 	else
-		printf("Socket successfully created..\n");
+		printf("socket criado com sucesso...\n");
 	bzero(&servaddr, sizeof(servaddr));
 
-	// assign IP, PORT
+	// atribuir IP e PORT
 	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // mudar para o IP 152.92.236.16?
+	servaddr.sin_addr.s_addr = inet_addr("152.92.236.17"); // original 127.0.0.1
 	servaddr.sin_port = htons(PORT);
 
-	// connect the client socket to server socket
+	// conecta o socket do client ao socket do servidor
 	if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) {
-		printf("connection with the server failed...\n");
+		printf("conexao com o servidor falhou...\n");
 		exit(0);
 	}
 	else
-		printf("connected to the server..\n");
+		printf("conectado ao servidor..\n");
 
 	// function for chat
 	func(sockfd);				// loop enviando uma mensagem com um tamanho configurado, aguardando a resposta, calculando o tempo de RTT?
-						// criar outro loop? - ao iniciar, o cliente fica aguardando uma mensagem de multicast do orquestrador.
+						          // criar outro loop? - ao iniciar, o cliente fica aguardando uma mensagem de multicast do orquestrador.
 	// close the socket
 	close(sockfd);
 }

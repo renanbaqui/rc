@@ -22,12 +22,12 @@ void func(int sockfd)
 		read(sockfd, buff, sizeof(buff));	// já responde com um eco da mensagem?
 		// print buffer which contains the client contents
 		printf("From client: %s\t To client : ", buff);
-		bzero(buff, MAX);
+		/*bzero(buff, MAX);
 		n = 0;
 		// copy server message in the buffer
 		while ((buff[n++] = getchar()) != '\n')
 			;
-
+    */
 		// and send that buffer to client
 		write(sockfd, buff, sizeof(buff));
 
