@@ -21,7 +21,7 @@ void func(int sockfd)
 		// read the message from client and copy it in buffer
 		read(sockfd, buff, sizeof(buff));	// já responde com um eco da mensagem?
 		// print buffer which contains the client contents
-		printf("From client: %s\t To client : ", buff);
+		printf("do client: %s\t para o client : \n", buff);
 		/*bzero(buff, MAX);
 		n = 0;
 		// copy server message in the buffer
@@ -33,7 +33,7 @@ void func(int sockfd)
 
 		// if msg contains "Exit" then server exit and chat ended.
 		if (strncmp("exit", buff, 4) == 0) {	// substituir por shutdown'?
-			printf("Server Exit...\n");
+			printf("server saiu...\n");
 			break;
 		}
 	}
@@ -48,11 +48,11 @@ int main()
 	// socket create and verification
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1) {
-		printf("socket creation failed...\n");
+		printf("criacao do socket falhou...\n");
 		exit(0);
 	}
 	else
-		printf("Socket successfully created..\n");
+		printf("socket criado com sucesso..\n");
 	bzero(&servaddr, sizeof(servaddr));
 
 	// assign IP, PORT
@@ -62,29 +62,29 @@ int main()
 
 	// Binding newly created socket to given IP and verification
 	if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
-		printf("socket bind failed...\n");
+		printf("vinculo do socket falhou...\n");
 		exit(0);
 	}
 	else
-		printf("Socket successfully binded..\n");
+		printf("socket vinculado com sucesso..\n");
 
 	// Now server is ready to listen and verification
 	if ((listen(sockfd, 5)) != 0) {
-		printf("Listen failed...\n");
+		printf("escuta do server falhou...\n");
 		exit(0);
 	}
 	else
-		printf("Server listening..\n");
+		printf("server escutando...\n");
 	len = sizeof(cli);
 
 	// Accept the data packet from client and verification
 	connfd = accept(sockfd, (SA*)&cli, &len);
 	if (connfd < 0) {
-		printf("server acccept failed...\n");
+		printf("aceite do server falhou...\n");
 		exit(0);
 	}
 	else
-		printf("server acccept the client...\n");
+		printf("server aceitou o client...\n");
 
 	// Function for chatting between client and server
 	func(connfd);

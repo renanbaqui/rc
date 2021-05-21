@@ -6,24 +6,29 @@
 #define MAX 80
 #define PORT 8080 // definicao de porta
 #define SA struct sockaddr
+
 void func(int sockfd)
 {
-	char buff[MAX]; // MAX tamanho em bytes da mensagem? // subtituir por array de bytes? // definir como 'ack'?
-	int n;
+	const char mensagem[MAX] = "teste";
+  char buff[MAX]; // MAX tamanho em bytes da mensagem? // subtituir por array de bytes? // definir como 'ack'?
+	int n, m = 4;
+  int i;
 	for (;;) {
-		bzero(buff, sizeof(buff));
-		printf("Enter the string : ");
-		n = 0;
-		while ((buff[n++] = getchar()) != '\n')
-			;
-		write(sockfd, buff, sizeof(buff));
-		bzero(buff, sizeof(buff));
-		read(sockfd, buff, sizeof(buff));
-		printf("From Server : %s", buff);
-		if ((strncmp(buff, "exit", 4)) == 0) { // substituir 'exit' por 'shutdown'?
-			printf("Client Exit...\n");
-			break;
+		//bzero(buff, sizeof(buff)); // zera o buffer
+		for(i=0; i<4; i++)
+    {
+      printf("String enviado : %s %d\n", mensagem, i);
+  		/*n = 0;
+  		while ((buff[n++] = getchar()) != '\n')
+  			;*/
+  		write(sockfd, mensagem, sizeof(mensagem));
+  		//bzero(buff, sizeof(buff));
+  		read(sockfd, buff, sizeof(buff));
+  		printf("String recebido : %s\n", buff);
+		//if ((strncmp(buff, "exit", 4)) == 0) { // substituir 'exit' por 'shutdown'?
+		//	printf("Client Exit...\n");
 		}
+    break;		
 	}
 }
 
@@ -42,7 +47,7 @@ int main()
 		printf("socket criado com sucesso...\n");
 	bzero(&servaddr, sizeof(servaddr));
 
-	// atribuir IP e PORT
+	// atribuicao de IP e PORT
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_addr.s_addr = inet_addr("152.92.236.17"); // original 127.0.0.1
 	servaddr.sin_port = htons(PORT);
