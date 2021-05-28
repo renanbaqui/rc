@@ -28,8 +28,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MSGBUFSIZE 256
+
 int main(int argc, char *argv[])
 {
+    int i=0;
+    
     if (argc != 3) {
        printf("Command line args should be multicast group and port\n");
        printf("(e.g. for SSDP, `sender 239.255.255.250 1900`)\n");
@@ -42,7 +46,7 @@ int main(int argc, char *argv[])
     // !!! If test requires, make these configurable via args
     //
     const int delay_secs = 1;
-    const char *message = "Hello, World!";
+    const char *message = "Mensagem de Multicast do Orquestrador";
 
 #ifdef _WIN32
     //
@@ -73,7 +77,7 @@ int main(int argc, char *argv[])
 
       // now just sendto() our destination!
     //
-    while (1) {
+    for (i=0;i<1;i++) { // numero de mensagens enviadas
         char ch = 0;
         int nbytes = sendto(
             fd,
@@ -87,6 +91,25 @@ int main(int argc, char *argv[])
             perror("sendto");
             return 1;
         }
+    //loop de recebimento
+    while (1) {
+        char msgbuf[MSGBUFSIZE];
+        int addrlen = sizeof(addr);
+        int nbytes = recvfrom(
+            fd,
+            msgbuf,
+            MSGBUFSIZE,
+            0,
+            (struct sockaddr *) &addr,
+            &addrlen
+        );
+        if (nbytes < 0) {
+            perror("recvfrom");
+            return 1;
+        }
+        msgbuf[nbytes] = '\0';
+        puts(msgbuf);
+    }
 
      #ifdef _WIN32
           Sleep(delay_secs * 1000); // Windows Sleep is milliseconds

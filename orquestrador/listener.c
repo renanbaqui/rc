@@ -29,6 +29,10 @@
 
 int main(int argc, char *argv[])
 {
+    int i=0;
+    
+    const char *message = "ack";
+    
     if (argc != 3) {
        printf("Command line args should be multicast group and port\n");
        printf("(e.g. for SSDP, `listener 239.255.255.250 1900`)\n");
@@ -118,6 +122,22 @@ int main(int argc, char *argv[])
         }
         msgbuf[nbytes] = '\0';
         puts(msgbuf);
+        
+        for (i=0;i<1;i++) { // numero de mensagens enviadas
+          char ch = 0;
+          int nbytes = sendto(
+              fd,
+              message,
+              strlen(message),
+              0,
+              (struct sockaddr*) &addr,
+              sizeof(addr)
+          );
+          if (nbytes < 0) {
+              perror("sendto");
+              return 1;
+          }
+        }       
      }
 
 #ifdef _WIN32
