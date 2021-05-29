@@ -91,6 +91,8 @@ int main(int argc, char *argv[])
             perror("sendto");
             return 1;
         }
+    }
+
     //loop de recebimento
     while (1) {
         char msgbuf[MSGBUFSIZE];
@@ -116,7 +118,6 @@ int main(int argc, char *argv[])
      #else
           sleep(delay_secs); // Unix sleep is seconds
      #endif
-     }
 
 #ifdef _WIN32
     //
