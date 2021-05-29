@@ -75,10 +75,17 @@ int main(int argc, char *argv[])
     addr.sin_addr.s_addr = inet_addr(group);
     addr.sin_port = htons(port);
 
-      // now just sendto() our destination!
+    // binda
+
+    if (bind(fd, (struct sockaddr*) &addr, sizeof(addr))==-1){
+        perror("bind");
+    }
+
+    // now just sendto() our destination!
     //
     for (i=0;i<1;i++) { // numero de mensagens enviadas
         char ch = 0;
+        puts("oi\n");
         int nbytes = sendto(
             fd,
             message,
@@ -91,6 +98,8 @@ int main(int argc, char *argv[])
             perror("sendto");
             return 1;
         }
+    }
+
     //loop de recebimento
     while (1) {
         char msgbuf[MSGBUFSIZE];
@@ -112,11 +121,10 @@ int main(int argc, char *argv[])
     }
 
      #ifdef _WIN32
-          Sleep(delay_secs * 1000); // Windows Sleep is milliseconds
+//          Sleep(delay_secs * 1000); // Windows Sleep is milliseconds
      #else
-          sleep(delay_secs); // Unix sleep is seconds
+//          sleep(delay_secs); // Unix sleep is seconds
      #endif
-     }
 
 #ifdef _WIN32
     //
