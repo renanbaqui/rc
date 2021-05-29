@@ -121,9 +121,9 @@ int main(int argc, char *argv[])
     }
 
      #ifdef _WIN32
-          Sleep(delay_secs * 1000); // Windows Sleep is milliseconds
+//          Sleep(delay_secs * 1000); // Windows Sleep is milliseconds
      #else
-          sleep(delay_secs); // Unix sleep is seconds
+//          sleep(delay_secs); // Unix sleep is seconds
      #endif
 
 #ifdef _WIN32
