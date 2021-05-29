@@ -75,10 +75,17 @@ int main(int argc, char *argv[])
     addr.sin_addr.s_addr = inet_addr(group);
     addr.sin_port = htons(port);
 
-      // now just sendto() our destination!
+    // binda
+
+    if (bind(fd, (struct sockaddr*) &addr, sizeof(addr))==-1){
+        perror("bind");
+    }
+
+    // now just sendto() our destination!
     //
     for (i=0;i<1;i++) { // numero de mensagens enviadas
         char ch = 0;
+        puts("oi\n");
         int nbytes = sendto(
             fd,
             message,
