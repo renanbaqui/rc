@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
        return 1;
     }
 
-        // set up destination address
+    // set up destination address
     //
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));

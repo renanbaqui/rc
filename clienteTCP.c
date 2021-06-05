@@ -3,23 +3,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-#define MAX 256  // define tamanho maximo
+#define MAX 128  // define tamanho maximo do char
 #define PORT 8080 // definicao de porta
 #define SA struct sockaddr
 
-#include <sys/time.h>
-#include <unistd.h>
+#include <sys/time.h>  // contagem do tempo
+#include <unistd.h>    // contagem do tempo
+
+#include <sys/types.h> // recv()
 
 char mensagem[MAX];
 
+int byte_count;
 
 void func(int sockfd, int tamanho, int repeticoes)
 {
-	int i, n;
+	
+  
+  int i, n;
   
   // char mensagem[] = "03 01 07 04"; // 
     
   // loop de criacao da mensagem no tamanho desejado
+  
+  
   for(i=0; i<tamanho; i++) {
     mensagem[i] = '1';
     //if (i==tamanho-1) {
@@ -40,16 +47,21 @@ void func(int sockfd, int tamanho, int repeticoes)
 		// envia a mensagem
     write(sockfd, mensagem, sizeof(mensagem));
 		
-    /*
-    n = 0; 
-		while ((buff[n++] = getchar()) != '\n');
-    bzero(buff, sizeof(buff));		
-    */
+    
+    //n = 0; 
+		//while ((buff[n++] = getchar()) != '\n');
+    //bzero(buff, sizeof(buff)); 		
+    
     
     // le a mensagem
     read(sockfd, buff, sizeof(buff));
 		printf("Mensagem recebida : %s\n", buff);
 	  
+    // all right!  now that we're connected, we can recieve some data!
+    byte_count = recv(sockfd, buff, sizeof(buff), 0);
+    printf("recv()'d %d bytes de dados no buff\n", byte_count);
+     
+    
      
     // if ((strncmp(buff, "exit", 4)) == 0) { // substituir 'exit' por 'shutdown'?
 	  // printf("Client Exit...\n");
@@ -62,7 +74,8 @@ int main()
 	struct sockaddr_in servaddr, cli;
   
   struct timeval start, end;
-  long mtime, secs, usecs;  
+  long mtime, secs, usecs; 
+  
 	
   // criacao do socket e verificacao
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
