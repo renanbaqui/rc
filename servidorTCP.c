@@ -5,35 +5,42 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#define MAX 80
-#define PORT 8080
+#define MAX 512  // define tamanho maximo do char
+#define PORT 8080  // definicao de porta
 #define SA struct sockaddr
 
 // Function designed for chat between client and server.
 void func(int sockfd)
 {
 	char buff[MAX];
-	int n;
+	int i;
 	// infinite loop for chat
-	for (;;) {
-		bzero(buff, MAX);
+	//for (;;) {
+ 
+  for (;;) {
+		
+    bzero(buff, MAX); // zera o buffer
 
 		// read the message from client and copy it in buffer
-		read(sockfd, buff, sizeof(buff));	// já responde com um eco da mensagem?
+		read(sockfd, buff, sizeof(buff));	
 		// print buffer which contains the client contents
-		printf("do client: %s\t para o client : \n", buff);
-		/*bzero(buff, MAX);
-		n = 0;
+		printf("mensagem do cliente TCP: %s\t", buff);
+		
+    //bzero(buff, MAX);
+		/*
+    n = 0;
 		// copy server message in the buffer
 		while ((buff[n++] = getchar()) != '\n')
 			;
     */
 		// and send that buffer to client
-		write(sockfd, buff, sizeof(buff));
+		
+    write(sockfd, buff, sizeof(buff));  // responde com um eco da mensagem recebida
+    printf("mensagem para o cliente TCP: %s\n", buff);
 
 		// if msg contains "Exit" then server exit and chat ended.
 		if (strncmp("exit", buff, 4) == 0) {	// substituir por shutdown'?
-			printf("server saiu...\n");
+			printf("servidor TCP saiu...\n");
 			break;
 		}
 	}
@@ -70,21 +77,21 @@ int main()
 
 	// Now server is ready to listen and verification
 	if ((listen(sockfd, 5)) != 0) {
-		printf("escuta do server falhou...\n");
+		printf("escuta do servidor TCP falhou...\n");
 		exit(0);
 	}
 	else
-		printf("server escutando...\n");
+		printf("servidor TCP escutando...\n");
 	len = sizeof(cli);
 
 	// Accept the data packet from client and verification
 	connfd = accept(sockfd, (SA*)&cli, &len);
 	if (connfd < 0) {
-		printf("aceite do server falhou...\n");
+		printf("aceite do servidor TCP falhou...\n");
 		exit(0);
 	}
 	else
-		printf("server aceitou o client...\n");
+		printf("o servidor TCP aceitou o cliente TCP...\n");
 
 	// Function for chatting between client and server
 	func(connfd);
