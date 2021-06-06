@@ -31,48 +31,47 @@ void func(int sockfd)
 	int n, i;
 	// infinite loop for chat
 	//for (;;) {
-  
-  printf("iniciando testes de mensagens entre servidor e cliente...\n");
-  
-  for (;;) {
-		
-    bzero(buff, MAX); // zera o buffer
 
-		// read the message from client and copy it in buffer
-		read(sockfd, buff, sizeof(buff));	
-		// print buffer which contains the client contents
-		printf("mensagem do cliente TCP: %s\t", buff);
-		
-    //bzero(buff, MAX);
-		/*
-    n = 0;
-		// copy server message in the buffer
-		printf("inserir mensagem para o cliente:");
-    while ((buff[n++] = getchar()) != '\n')
-			;
-    */
-		// and send that buffer to client		
-    write(sockfd, buff, sizeof(buff));  // responde com um eco da mensagem recebida
-    printf("mensagem para o cliente TCP: %s\n", buff);    
-    
-    // nao esta saindo por aqui... verificar...
-		
-    // if msg contains "Exit" then server exit and chat ended.		
-    if (strncmp("exit", buff, 4) == 0) {	
-			printf("servidor TCP saiu...\n");
-			break;
-		}    
-	}
+    printf("iniciando testes de mensagens entre servidor e cliente...\n");
+
+    for (;;) {
+
+        bzero(buff, MAX); // zera o buffer
+
+        // read the message from client and copy it in buffer
+        read(sockfd, buff, sizeof(buff));
+        // print buffer which contains the client contents
+        printf("mensagem do cliente TCP: %s\t", buff);
+
+        //bzero(buff, MAX);
+        /*
+        n = 0;
+        // copy server message in the buffer
+        printf("inserir mensagem para o cliente:");
+        while ((buff[n++] = getchar()) != '\n')
+                ;
+        */
+        // and send that buffer to client
+        write(sockfd, buff, sizeof(buff));  // responde com um eco da mensagem recebida
+        printf("mensagem para o cliente TCP: %s\n", buff);
+
+        // nao esta saindo por aqui... verificar...
+
+        // if msg contains "Exit" then server exit and chat ended.
+        if (strncmp("exit", buff, 4) == 0) {
+            printf("servidor TCP saiu...\n");
+            break;
+        }
+    }
 }
+
 
 
 
 int main(int argc, char *argv[])
 {
-
-	
-	// INICIO DO UDP	
-	int i=0, j=1;
+    // INICIO DO UDP
+    int i=0, j=1;
     
     char *message = "ack do servidor";
     
@@ -170,7 +169,7 @@ int main(int argc, char *argv[])
             return 0;
             break;
         }
-        
+
         // envia o ack do servidor para o orquestrador e cria o socket TCP
         while (j) {  // limita o loop a executar somente uma vez
             for (i=0;i<1;i++) { // numero de mensagens enviadas
