@@ -190,88 +190,80 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        while (j) {  // limita o loop a executar somente uma vez
-            for (i=0;i<1;i++) { // numero de mensagens enviadas
-                char ch = 0;
-                // TCP
-                int sockfd, connfd, len;
-                struct sockaddr_in servaddr, cli;
+        ///////////////////
+        // TCP (teste)
 
-                // socket create and verification
-                sockfd = socket(AF_INET, SOCK_STREAM, 0);
-                if (sockfd == -1) {
-                    printf("criacao do socket falhou...\n");
-                    exit(0);
-                } else {
-                    printf("socket criado com sucesso..\n");
-                }
-                bzero(&servaddr, sizeof(servaddr));
+        int sockfd, connfd, len;
+        struct sockaddr_in servaddr, cli;
 
-                // assign IP, PORT
-                servaddr.sin_family = AF_INET;
-                servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-                servaddr.sin_port = htons(PORT);
+        // socket create and verification
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd == -1) {
+            printf("criacao do socket falhou...\n");
+            exit(0);
+        } else {
+            printf("socket criado com sucesso..\n");
+        }
+        bzero(&servaddr, sizeof(servaddr));
 
-                // Binding newly created socket to given IP and verification
-                if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
-                    printf("vinculo do socket falhou...\n");
-                    exit(0);
-                } else {
-                    printf("socket vinculado com sucesso..\n");
-                }
+        // assign IP, PORT
+        servaddr.sin_family = AF_INET;
+        servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+        servaddr.sin_port = htons(PORT);
 
-                // Now server is ready to listen and verification
-                if ((listen(sockfd, 5)) != 0) {
-                    printf("escuta do servidor TCP falhou...\n");
-                    exit(0);
-                } else {
-                    printf("servidor TCP escutando...\n");
-                }
-                len = sizeof(cli);
+        // Binding newly created socket to given IP and verification
+        if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
+            printf("vinculo do socket falhou...\n");
+            exit(0);
+        } else {
+            printf("socket vinculado com sucesso..\n");
+        }
 
-                // Accept the data packet from client and verification
-                connfd = accept(sockfd, (SA*)&cli, &len);
-                if (connfd < 0) {
-                    printf("aceite do servidor TCP falhou...\n");
-                    exit(0);
-                } else {
-                    printf("o servidor TCP aceitou o cliente TCP...\n");
-                }
-                // TCP
-                // Function for chatting between client and server
-                teste(connfd, m);
+        // Now server is ready to listen and verification
+        if ((listen(sockfd, 5)) != 0) {
+            printf("escuta do servidor TCP falhou...\n");
+            exit(0);
+        } else {
+            printf("servidor TCP escutando...\n");
+        }
+        len = sizeof(cli);
 
-
-                // After chatting close the socket
-                close(sockfd);
+        // Accept the data packet from client and verification
+        connfd = accept(sockfd, (SA*)&cli, &len);
+        if (connfd < 0) {
+            printf("aceite do servidor TCP falhou...\n");
+            exit(0);
+        } else {
+            printf("o servidor TCP aceitou o cliente TCP...\n");
+        }
+        // TCP
+        // Function for chatting between client and server
+        teste(connfd, m);
 
 
-                // FIM DO TCP
-
-                // envio de mensagem de 'terminei' multicast
-                printf("servidor enviando mensagem de terminei...\n");
-
-                m->tipo = EXITO;
-
-                ch = 0;
-                nbytes = sendto(fd,
-                                msgbuf,
-                                TAMANHO_DA_MENSAGEM,
-                                0,
-                                (struct sockaddr*) &addr,
-                                sizeof(addr)
-                                );
-                if (nbytes < 0) {
-                    perror("sendto");
-                    return 1;
-                }
+        // After chatting close the socket
+        close(sockfd);
 
 
-            }
-            j = 0;
+        // FIM DO TCP
+
+        // envio de mensagem de 'terminei' multicast
+        printf("servidor enviando mensagem de terminei...\n");
+
+        m->tipo = EXITO;
+
+        nbytes = sendto(fd,
+                        msgbuf,
+                        TAMANHO_DA_MENSAGEM,
+                        0,
+                        (struct sockaddr*) &addr,
+                        sizeof(addr)
+                        );
+        if (nbytes < 0) {
+            perror("sendto");
+            return 1;
         }
     }
-	 
 
 
 #ifdef _WIN32
