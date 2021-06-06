@@ -197,9 +197,9 @@ int main(int argc, char *argv[])
 				  if (sockfd == -1) {
 					  printf("criacao do socket falhou...\n");
 					  exit(0);
-				  }
-				  else
+                  } else {
 					  printf("socket criado com sucesso..\n");
+                  }
 				  bzero(&servaddr, sizeof(servaddr));
 
 				// assign IP, PORT
@@ -211,17 +211,17 @@ int main(int argc, char *argv[])
 				if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
 					printf("vinculo do socket falhou...\n");
 					exit(0);
-				}
-				else
+                } else {
 					printf("socket vinculado com sucesso..\n");
+                }
 
 				// Now server is ready to listen and verification
 				if ((listen(sockfd, 5)) != 0) {
 					printf("escuta do servidor TCP falhou...\n");
 					exit(0);
-				}
-				else
+                } else {
 					printf("servidor TCP escutando...\n");
+                }
 				len = sizeof(cli);
 
 				// Accept the data packet from client and verification
@@ -229,9 +229,9 @@ int main(int argc, char *argv[])
 				if (connfd < 0) {
 					printf("aceite do servidor TCP falhou...\n");
 					exit(0);
-				}
-				else
-				printf("o servidor TCP aceitou o cliente TCP...\n");
+                } else {
+                    printf("o servidor TCP aceitou o cliente TCP...\n");
+                }
 				// FIM DO TCP     
 				
         // envio de mensagem de 'terminei' multicast       
