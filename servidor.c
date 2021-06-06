@@ -65,51 +65,7 @@ void func(int sockfd)
 
 int main(int argc, char *argv[])
 {
-    // TCP
-	int sockfd, connfd, len;
-	struct sockaddr_in servaddr, cli;
 
-	// socket create and verification
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd == -1) {
-		printf("criacao do socket falhou...\n");
-		exit(0);
-	}
-	else
-		printf("socket criado com sucesso..\n");
-	bzero(&servaddr, sizeof(servaddr));
-
-	// assign IP, PORT
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	servaddr.sin_port = htons(PORT);
-
-	// Binding newly created socket to given IP and verification
-	if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
-		printf("vinculo do socket falhou...\n");
-		exit(0);
-	}
-	else
-		printf("socket vinculado com sucesso..\n");
-
-	// Now server is ready to listen and verification
-	if ((listen(sockfd, 5)) != 0) {
-		printf("escuta do servidor TCP falhou...\n");
-		exit(0);
-	}
-	else
-		printf("servidor TCP escutando...\n");
-	len = sizeof(cli);
-
-	// Accept the data packet from client and verification
-	connfd = accept(sockfd, (SA*)&cli, &len);
-	if (connfd < 0) {
-		printf("aceite do servidor TCP falhou...\n");
-		exit(0);
-	}
-	else
-	printf("o servidor TCP aceitou o cliente TCP...\n");
-	// FIM DO TCP
 	
 	// INICIO DO UDP	
 	int i=0, j=1;
@@ -125,7 +81,7 @@ int main(int argc, char *argv[])
     char* group = argv[1]; // e.g. 239.255.255.250 for SSDP
     int port = atoi(argv[2]); // 0 if error, which is an invalid port
 
-
+	
 #ifdef _WIN32
     //
     // Initialize Windows Socket API with given VERSION.
@@ -207,33 +163,81 @@ int main(int argc, char *argv[])
         msgbuf[nbytes] = '\0';
         puts(msgbuf);
         
-        // envia o ack do servidor para o orquestrador
+        // envia o ack do servidor para o orquestrador e cria o socket TCP
 		while (j) {  // limita o loop a executar somente uma vez
-          for (i=0;i<1;i++) { // numero de mensagens enviadas
-              char ch = 0;
-              int nbytes = sendto(
-                  fd,
-                  message,
-                  strlen(message),
-                  0,
-                  (struct sockaddr*) &addr,
-                  sizeof(addr)
-              );
-              if (nbytes < 0) {
-                  perror("sendto");
-                  return 1;
-              }          
-          }
-          j = 0;
-        }       
-     }
-	 
-	 
-	// Function for chatting between client and server
-	func(connfd);
+			for (i=0;i<1;i++) { // numero de mensagens enviadas
+				char ch = 0;
+				int nbytes = sendto(
+					fd,
+					message,
+					strlen(message),
+					0,
+					(struct sockaddr*) &addr,
+					sizeof(addr)
+				);
+				if (nbytes < 0) {
+					perror("sendto");
+					return 1;
+				}
+				// TCP
+				int sockfd, connfd, len;
+				struct sockaddr_in servaddr, cli;
 
-	// After chatting close the socket
-	close(sockfd);
+				// socket create and verification
+				sockfd = socket(AF_INET, SOCK_STREAM, 0);
+				if (sockfd == -1) {
+					printf("criacao do socket falhou...\n");
+					exit(0);
+				}
+				else
+					printf("socket criado com sucesso..\n");
+				bzero(&servaddr, sizeof(servaddr));
+
+				// assign IP, PORT
+				servaddr.sin_family = AF_INET;
+				servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+				servaddr.sin_port = htons(PORT);
+
+				// Binding newly created socket to given IP and verification
+				if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
+					printf("vinculo do socket falhou...\n");
+					exit(0);
+				}
+				else
+					printf("socket vinculado com sucesso..\n");
+
+				// Now server is ready to listen and verification
+				if ((listen(sockfd, 5)) != 0) {
+					printf("escuta do servidor TCP falhou...\n");
+					exit(0);
+				}
+				else
+					printf("servidor TCP escutando...\n");
+				len = sizeof(cli);
+
+				// Accept the data packet from client and verification
+				connfd = accept(sockfd, (SA*)&cli, &len);
+				if (connfd < 0) {
+					printf("aceite do servidor TCP falhou...\n");
+					exit(0);
+				}
+				else
+				printf("o servidor TCP aceitou o cliente TCP...\n");
+				// FIM DO TCP
+				
+				// TCP 
+				// Function for chatting between client and server
+				func(connfd);
+
+				// After chatting close the socket
+				close(sockfd);				
+			  
+			}
+			j = 0;
+        }       
+    }
+	 
+
 
 #ifdef _WIN32
     //
