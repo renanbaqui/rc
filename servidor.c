@@ -31,7 +31,9 @@ void func(int sockfd)
 	int n, i;
 	// infinite loop for chat
 	//for (;;) {
- 
+  
+  printf("iniciando testes de mensagens entre servidor e cliente...\n");
+  
   for (;;) {
 		
     bzero(buff, MAX); // zera o buffer
@@ -40,12 +42,13 @@ void func(int sockfd)
 		read(sockfd, buff, sizeof(buff));	
 		// print buffer which contains the client contents
 		printf("mensagem do cliente TCP: %s\t", buff);
-		/*
-    bzero(buff, MAX);
 		
+    //bzero(buff, MAX);
+		/*
     n = 0;
 		// copy server message in the buffer
-		while ((buff[n++] = getchar()) != '\n')
+		printf("inserir mensagem para o cliente:");
+    while ((buff[n++] = getchar()) != '\n')
 			;
     */
 		// and send that buffer to client		
@@ -54,11 +57,11 @@ void func(int sockfd)
     
     // nao esta saindo por aqui... verificar...
 		
-    // if msg contains "Exit" then server exit and chat ended.
-		if (strncmp("exit", buff, 4) == 0) {	
+    // if msg contains "Exit" then server exit and chat ended.		
+    if (strncmp("exit", buff, 4) == 0) {	
 			printf("servidor TCP saiu...\n");
 			break;
-		}
+		}    
 	}
 }
 
@@ -163,6 +166,11 @@ int main(int argc, char *argv[])
       }
       msgbuf[nbytes] = '\0';
       puts(msgbuf);
+      if (msgbuf[0] == 's') {  // testando com primeira letra de 's' de shutdown
+        printf("recebendo shutdown do orquestrador e desligando o servidor...\n");
+        return 0;
+        break;
+      }      
         
       // envia o ack do servidor para o orquestrador e cria o socket TCP
 		  while (j) {  // limita o loop a executar somente uma vez
@@ -227,23 +235,21 @@ int main(int argc, char *argv[])
 				// FIM DO TCP     
 				
         // envio de mensagem de 'terminei' multicast       
-        char *message = "terminei do servidor";
-       
-        //for (i=0;i<1;i++) { // numero de mensagens enviadas
-				  ch = 0;
-				  nbytes = sendto(
-					  fd,
-					  message,
-					  strlen(message),
-					  0,
-					  (struct sockaddr*) &addr,
-					  sizeof(addr)
-				  );
-				  if (nbytes < 0) {
-					  perror("sendto");
-					  return 1;
-				  }				
-			  //}        
+        printf("enviando mensagem de terminei do servidor...\n");
+        char *message = "terminei do servidor";       
+        ch = 0;
+				nbytes = sendto(
+					fd,
+					message,
+					strlen(message),
+					0,
+					(struct sockaddr*) &addr,
+				  sizeof(addr)
+				);
+				if (nbytes < 0) {
+				  perror("sendto");
+					return 1;
+				}			          
         
 				// TCP 
 				// Function for chatting between client and server

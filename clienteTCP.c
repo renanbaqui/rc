@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-#define MAX 128  // define tamanho maximo do char
+#define MAX 256  // define tamanho maximo do char
 #define PORT 8080 // definicao de porta
 #define SA struct sockaddr
 
@@ -17,24 +17,23 @@ char mensagem[MAX];
 int byte_count;
 
 void func(int sockfd, int tamanho, int repeticoes)
-{
-	
+{	
   
   int i, n;
   
-  // char mensagem[] = "03 01 07 04"; // 
-    
+  const char mensagem[] = "03 01 07 04"; // 
+  /*  
   // loop de criacao da mensagem no tamanho desejado  
   for(i=0; i<tamanho; i++) {
     mensagem[i] = '1';
-    //if (i==tamanho-1) {
-    //  mensagem[i] = '\0';
-    //}  
+    if (i==tamanho-1) {
+      mensagem[i] = '\0';
+    }  
   }
-  
+  */
   char buff[MAX]; // MAX tamanho em bytes da mensagem
 	 
-  //bzero(buff, sizeof(buff)); // zera o buffer
+  bzero(buff, sizeof(buff)); // zera o buffer
 	
   // loop de envio e recebimento de mensagens
   for(i=0; i<repeticoes; i++)  // repete o envio e recebimento de string 'repeticoes' vezes 
@@ -46,14 +45,14 @@ void func(int sockfd, int tamanho, int repeticoes)
     
     //n = 0; 
 		//while ((buff[n++] = getchar()) != '\n');
-    //bzero(buff, sizeof(buff));    
+    bzero(buff, sizeof(buff));  // zera o buffer    
     
     // le a mensagem e imprime
     read(sockfd, buff, sizeof(buff));
 		printf("mensagem recebida do servidor: %s\n", buff);
 	  
         
-    // all right! now that we're connected, we can recieve some data!
+    // all right! now that we're connected, we can receive some data!
     byte_count = recv(sockfd, buff, sizeof(buff), 0);
     printf("recv()'d %d bytes de dados no buff\n", byte_count);
     
@@ -102,12 +101,12 @@ int main()
 		exit(0);
 	}
 	else
-		printf("conectado ao servidor..\n");
+		printf("conectado ao servidor...\n");
   
   gettimeofday(&start, NULL); // inicio da contagem do tempo
   
 	// function for chat
-	func(sockfd, 16, 64);				// loop enviando uma mensagem com um tamanho configurado, aguardando a resposta, calculando o tempo de RTT?
+	func(sockfd, 16, 16);				// loop enviando uma mensagem com um tamanho configurado, aguardando a resposta, calculando o tempo de RTT?
 						                  // criar outro loop? - ao iniciar, o cliente fica aguardando uma mensagem de multicast do orquestrador.
 
   gettimeofday(&end, NULL);  // fim da contagem do tempo  
