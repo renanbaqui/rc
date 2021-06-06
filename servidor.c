@@ -27,7 +27,7 @@
 //TCP
 void teste(int sockfd)
 {
-	char buff[MAX];
+    char msgbuff[MAX];
 	int n, i;
 	// infinite loop for chat
 	//for (;;) {
@@ -36,12 +36,18 @@ void teste(int sockfd)
 
     for (;;) {
 
-        bzero(buff, MAX); // zera o buffer
+        bzero(msgbuff, MAX); // zera o buffer
 
         // read the message from client and copy it in buffer
-        read(sockfd, buff, sizeof(buff));
+        read(sockfd, msgbuff, TAMANHO_DA_MENSAGEM);
         // print buffer which contains the client contents
-        printf("mensagem do cliente TCP: %s\t", buff);
+        mensagem_t* m = (mensagem_t*) msgbuff;
+
+        printf("mensagem do cliente TCP: tipo %x origem %x tamanho %x repetições %x\t",
+               m->tipo,
+               m->origem,
+               m->tamanho,
+               m->repeticoes);
 
         //bzero(buff, MAX);
         /*
@@ -52,13 +58,13 @@ void teste(int sockfd)
                 ;
         */
         // and send that buffer to client
-        write(sockfd, buff, sizeof(buff));  // responde com um eco da mensagem recebida
-        printf("mensagem para o cliente TCP: %s\n", buff);
+        write(sockfd, msgbuff, sizeof(msgbuff));  // responde com um eco da mensagem recebida
+        printf("mensagem para o cliente TCP: %s\n", msgbuff);
 
         // nao esta saindo por aqui... verificar...
 
         // if msg contains "Exit" then server exit and chat ended.
-        if (strncmp("exit", buff, 4) == 0) {
+        if (strncmp("exit", msgbuff, 4) == 0) {
             printf("servidor TCP saiu...\n");
             break;
         }
