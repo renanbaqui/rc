@@ -35,6 +35,14 @@ void escreve_mensagem (mensagem_t* m,
 	m->repeticoes = repeticoes;
 }
 
+unsigned int tamanho(mensagem_t* m){
+    return 1 << m->tamanho;
+}
+
+unsigned int repeticoes(mensagem_t* m){
+    return 1 << m->repeticoes;
+}
+
 #define TAMANHO_DA_MENSAGEM 4
 
 #endif // MENSAGEM_H

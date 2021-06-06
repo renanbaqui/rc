@@ -25,49 +25,33 @@
 #define SA struct sockaddr
 
 //TCP
-void teste(int sockfd)
+void teste(int sockfd, mensagem_t* m_dispara)
 {
     char msgbuff[MAX];
-	int n, i;
-	// infinite loop for chat
-	//for (;;) {
+    int n, i;
+    int r = repeticoes(m_dispara);
+    int t = tamanho(m_dispara);
 
     printf("iniciando testes de mensagens entre servidor e cliente...\n");
 
-    for (;;) {
+    for (i=0; i < r; i++) {
 
         bzero(msgbuff, MAX); // zera o buffer
 
-        // read the message from client and copy it in buffer
-        read(sockfd, msgbuff, TAMANHO_DA_MENSAGEM);
-        // print buffer which contains the client contents
+        read(sockfd, msgbuff, t);
+
         mensagem_t* m = (mensagem_t*) msgbuff;
 
-        printf("mensagem do cliente TCP: tipo %x origem %x tamanho %x repetições %x\t",
+        printf("mensagem %d/%d do cliente TCP: tipo %x origem %x tamanho %x repetições %x\t",
+               i,
+               r,
                m->tipo,
                m->origem,
                m->tamanho,
                m->repeticoes);
 
-        //bzero(buff, MAX);
-        /*
-        n = 0;
-        // copy server message in the buffer
-        printf("inserir mensagem para o cliente:");
-        while ((buff[n++] = getchar()) != '\n')
-                ;
-        */
-        // and send that buffer to client
+        m->origem = SERVIDOR;
         write(sockfd, msgbuff, sizeof(msgbuff));  // responde com um eco da mensagem recebida
-        printf("mensagem para o cliente TCP: %s\n", msgbuff);
-
-        // nao esta saindo por aqui... verificar...
-
-        // if msg contains "Exit" then server exit and chat ended.
-        if (strncmp("exit", msgbuff, 4) == 0) {
-            printf("servidor TCP saiu...\n");
-            break;
-        }
     }
 }
 
@@ -255,7 +239,7 @@ int main(int argc, char *argv[])
                 }
                 // TCP
                 // Function for chatting between client and server
-                teste(connfd);
+                teste(connfd, m);
 
 
                 // After chatting close the socket
