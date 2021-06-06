@@ -2,6 +2,20 @@
 #define MENSAGEM_H
 
 
+enum Tipo {
+	DISPARA=0,
+	DESLIGA=1,
+	EXITO=2,
+	ECO=3
+};
+
+enum Origem {
+	ORQUESTRADOR=0,
+	CLIENTE=1,
+	SERVIDOR=2
+};
+
+
 struct {
     unsigned char tipo;
     unsigned char origem;

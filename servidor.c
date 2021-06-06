@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "mensagem.h"
 
 #define MSGBUFSIZE 1024 // define tamanho maximo UDP
 
@@ -152,7 +153,7 @@ int main(int argc, char *argv[])
         int addrlen = sizeof(addr);
         int nbytes = recvfrom(fd,
                               msgbuf,
-                              MSGBUFSIZE,
+                              TAMANHO_DA_MENSAGEM,
                               0,
                               (struct sockaddr *) &addr,
                               &addrlen
@@ -160,30 +161,48 @@ int main(int argc, char *argv[])
         if (nbytes < 0) {
             perror("recvfrom");
             return 1;
+        } else if (nbytes < 4){
+            puts("Não recebi uma mensagem inteira\n");
+            return 1;
         }
-        msgbuf[nbytes] = '\0';
-        puts(msgbuf);
-        if (msgbuf[0] == 's') {  // testando com primeira letra de 's' de shutdown
+
+        mensagem_t* m = (mensagem_t*) msgbuf;
+
+        if (m->origem != ORQUESTRADOR) {
+            // Ignora e lê próxima mensagem
+            continue;
+        }
+
+        switch (m->tipo){
+        case (DISPARA):
+            printf("recebendo dispara do orquestrador e preparando pra teste...\n");
+            break;
+        case (DESLIGA):
             printf("recebendo shutdown do orquestrador e desligando o servidor...\n");
             return 0;
-            break;
+        default:
+            printf("recebei mensagem inválida de tipo %d, desligando o servidor...\n",
+                   m->tipo);
+            return -1;
         }
 
         // envia o ack do servidor para o orquestrador e cria o socket TCP
+        m->origem = SERVIDOR;
+        int nbytes = sendto(fd,
+                            msgbuf,
+                            TAMANHO_DA_MENSAGEM,
+                            0,
+                            (struct sockaddr*) &addr,
+                            sizeof(addr)
+                            );
+        if (nbytes < 0) {
+            perror("sendto ack dispara");
+            return 1;
+        }
+
         while (j) {  // limita o loop a executar somente uma vez
             for (i=0;i<1;i++) { // numero de mensagens enviadas
                 char ch = 0;
-                int nbytes = sendto(fd,
-                                    message,
-                                    strlen(message),
-                                    0,
-                                    (struct sockaddr*) &addr,
-                                    sizeof(addr)
-                                    );
-                if (nbytes < 0) {
-                    perror("sendto");
-                    return 1;
-                }
                 // TCP
                 int sockfd, connfd, len;
                 struct sockaddr_in servaddr, cli;
@@ -228,15 +247,26 @@ int main(int argc, char *argv[])
                 } else {
                     printf("o servidor TCP aceitou o cliente TCP...\n");
                 }
+                // TCP
+                // Function for chatting between client and server
+                teste(connfd);
+
+
+                // After chatting close the socket
+                close(sockfd);
+
+
                 // FIM DO TCP
 
                 // envio de mensagem de 'terminei' multicast
-                printf("enviando mensagem de terminei do servidor...\n");
-                char *message = "terminei do servidor";
+                printf("servidor enviando mensagem de terminei...\n");
+
+                m->tipo = EXITO;
+
                 ch = 0;
                 nbytes = sendto(fd,
-                                message,
-                                strlen(message),
+                                msgbuf,
+                                TAMANHO_DA_MENSAGEM,
                                 0,
                                 (struct sockaddr*) &addr,
                                 sizeof(addr)
@@ -246,15 +276,6 @@ int main(int argc, char *argv[])
                     return 1;
                 }
 
-                // TCP
-                // Function for chatting between client and server
-                teste(connfd);
-
-
-
-
-                // After chatting close the socket
-                close(sockfd);
 
             }
             j = 0;
