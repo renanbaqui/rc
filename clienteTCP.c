@@ -24,9 +24,7 @@ void func(int sockfd, int tamanho, int repeticoes)
   
   // char mensagem[] = "03 01 07 04"; // 
     
-  // loop de criacao da mensagem no tamanho desejado
-  
-  
+  // loop de criacao da mensagem no tamanho desejado  
   for(i=0; i<tamanho; i++) {
     mensagem[i] = '1';
     //if (i==tamanho-1) {
@@ -34,37 +32,43 @@ void func(int sockfd, int tamanho, int repeticoes)
     //}  
   }
   
-  char buff[MAX]; // MAX tamanho em bytes da mensagem? // subtituir por array de bytes? // definir como 'ack'?
+  char buff[MAX]; // MAX tamanho em bytes da mensagem
 	 
   //bzero(buff, sizeof(buff)); // zera o buffer
 	
   // loop de envio e recebimento de mensagens
   for(i=0; i<repeticoes; i++)  // repete o envio e recebimento de string 'repeticoes' vezes 
   {
-    printf("Mensagem enviada : %s numero %d\n", mensagem, i);
-		
-
-		// envia a mensagem
+    
+		// envia a mensagem e imprime
     write(sockfd, mensagem, sizeof(mensagem));
-		
+		printf("mensagem enviada para o servidor: %s numero %d\n", mensagem, i);    
     
     //n = 0; 
 		//while ((buff[n++] = getchar()) != '\n');
-    //bzero(buff, sizeof(buff)); 		
+    //bzero(buff, sizeof(buff));    
     
-    
-    // le a mensagem
+    // le a mensagem e imprime
     read(sockfd, buff, sizeof(buff));
-		printf("Mensagem recebida : %s\n", buff);
+		printf("mensagem recebida do servidor: %s\n", buff);
 	  
-    // all right!  now that we're connected, we can recieve some data!
+        
+    // all right! now that we're connected, we can recieve some data!
     byte_count = recv(sockfd, buff, sizeof(buff), 0);
     printf("recv()'d %d bytes de dados no buff\n", byte_count);
-     
     
-     
-    // if ((strncmp(buff, "exit", 4)) == 0) { // substituir 'exit' por 'shutdown'?
-	  // printf("Client Exit...\n");
+    
+    // termina a conexao no final do loop?
+    if (i == repeticoes-1) {      
+      char mensagem[] = "exit";
+      write(sockfd, mensagem, sizeof(mensagem));
+      char buff[] = "exit";
+      puts(buff);
+    }     
+    
+    if ((strncmp(buff, "exit", 4)) == 0) { // substituir 'exit' por 'shutdown'?
+	    printf("Client Exit...\n");
+    }
 	} 
 }
 
@@ -92,7 +96,7 @@ int main()
 	servaddr.sin_addr.s_addr = inet_addr("152.92.236.17"); // original 127.0.0.1
 	servaddr.sin_port = htons(PORT);
 
-	// conecta o socket do client ao socket do servidor
+	// conecta o socket do cliente ao socket do servidor
 	if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) {
 		printf("conexao com o servidor falhou...\n");
 		exit(0);
@@ -103,7 +107,7 @@ int main()
   gettimeofday(&start, NULL); // inicio da contagem do tempo
   
 	// function for chat
-	func(sockfd, 16, 16);				// loop enviando uma mensagem com um tamanho configurado, aguardando a resposta, calculando o tempo de RTT?
+	func(sockfd, 16, 64);				// loop enviando uma mensagem com um tamanho configurado, aguardando a resposta, calculando o tempo de RTT?
 						                  // criar outro loop? - ao iniciar, o cliente fica aguardando uma mensagem de multicast do orquestrador.
 
   gettimeofday(&end, NULL);  // fim da contagem do tempo  
@@ -111,7 +115,7 @@ int main()
   secs  = end.tv_sec  - start.tv_sec;
   usecs = end.tv_usec - start.tv_usec;
   mtime = ((secs) * 1000 + usecs/1000.0) + 0.5;
-  printf("Tempo decorrido: %ld milissegundos\n", mtime);
+  printf("tempo decorrido: %ld milissegundos\n", mtime);
   
   // close the socket
 	close(sockfd);

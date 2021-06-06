@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     // !!! If test requires, make these configurable via args
     //
     const int delay_secs = 1;
-    const char *message = "Mensagem de Multicast do Orquestrador";
+    const char *message = "mensagem de multicast do orquestrador";
     char *mensagem1, *mensagem2;
 
 #ifdef _WIN32

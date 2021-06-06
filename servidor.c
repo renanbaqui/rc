@@ -15,12 +15,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MSGBUFSIZE 1024 // define tamanho maximo
+#define MSGBUFSIZE 1024 // define tamanho maximo UDP
 
 // TCP
 #include <netdb.h>
-#define MAX 1024  // define tamanho maximo do char
-#define PORT 8080  // definicao de porta
+#define MAX 65536  // define tamanho maximo TCP
+#define PORT 8080  // definicao de porta TCP
 #define SA struct sockaddr
 
 //TCP
@@ -28,7 +28,7 @@
 void func(int sockfd)
 {
 	char buff[MAX];
-	int i;
+	int n, i;
 	// infinite loop for chat
 	//for (;;) {
  
@@ -40,21 +40,22 @@ void func(int sockfd)
 		read(sockfd, buff, sizeof(buff));	
 		// print buffer which contains the client contents
 		printf("mensagem do cliente TCP: %s\t", buff);
-		
-    //bzero(buff, MAX);
 		/*
+    bzero(buff, MAX);
+		
     n = 0;
 		// copy server message in the buffer
 		while ((buff[n++] = getchar()) != '\n')
 			;
     */
-		// and send that buffer to client
-		
+		// and send that buffer to client		
     write(sockfd, buff, sizeof(buff));  // responde com um eco da mensagem recebida
-    printf("mensagem para o cliente TCP: %s\n", buff);
-
-		// if msg contains "Exit" then server exit and chat ended.
-		if (strncmp("exit", buff, 4) == 0) {	// substituir por shutdown'?
+    printf("mensagem para o cliente TCP: %s\n", buff);    
+    
+    // nao esta saindo por aqui... verificar...
+		
+    // if msg contains "Exit" then server exit and chat ended.
+		if (strncmp("exit", buff, 4) == 0) {	
 			printf("servidor TCP saiu...\n");
 			break;
 		}
@@ -70,7 +71,7 @@ int main(int argc, char *argv[])
 	// INICIO DO UDP	
 	int i=0, j=1;
     
-    const char *message = "ack do servidor";
+    char *message = "ack do servidor";
     
     if (argc != 3) {
        printf("Command line args should be multicast group and port\n");
@@ -145,53 +146,53 @@ int main(int argc, char *argv[])
     // now just enter a read-print loop
     //
     printf("servidor aguardando mensagem multicast do orquestrador...\n");
-	while (1) {
-        char msgbuf[MSGBUFSIZE];
-        int addrlen = sizeof(addr);
-        int nbytes = recvfrom(
-            fd,
-            msgbuf,
-            MSGBUFSIZE,
-            0,
-            (struct sockaddr *) &addr,
-            &addrlen
-        );
-        if (nbytes < 0) {
-            perror("recvfrom");
-            return 1;
-        }
-        msgbuf[nbytes] = '\0';
-        puts(msgbuf);
+	  while (1) {
+      char msgbuf[MSGBUFSIZE];
+      int addrlen = sizeof(addr);
+      int nbytes = recvfrom(
+        fd,
+        msgbuf,
+        MSGBUFSIZE,
+        0,
+        (struct sockaddr *) &addr,
+        &addrlen
+       );
+      if (nbytes < 0) {
+        perror("recvfrom");
+        return 1;
+      }
+      msgbuf[nbytes] = '\0';
+      puts(msgbuf);
         
-        // envia o ack do servidor para o orquestrador e cria o socket TCP
-		while (j) {  // limita o loop a executar somente uma vez
-			for (i=0;i<1;i++) { // numero de mensagens enviadas
-				char ch = 0;
-				int nbytes = sendto(
-					fd,
-					message,
-					strlen(message),
-					0,
-					(struct sockaddr*) &addr,
-					sizeof(addr)
-				);
-				if (nbytes < 0) {
-					perror("sendto");
-					return 1;
-				}
-				// TCP
-				int sockfd, connfd, len;
-				struct sockaddr_in servaddr, cli;
+      // envia o ack do servidor para o orquestrador e cria o socket TCP
+		  while (j) {  // limita o loop a executar somente uma vez
+		    for (i=0;i<1;i++) { // numero de mensagens enviadas
+				  char ch = 0;
+				  int nbytes = sendto(
+					  fd,
+					  message,
+					  strlen(message),
+					  0,
+					  (struct sockaddr*) &addr,
+					  sizeof(addr)
+				  );
+				  if (nbytes < 0) {
+					  perror("sendto");
+					  return 1;
+				  }
+				  // TCP
+				  int sockfd, connfd, len;
+				  struct sockaddr_in servaddr, cli;
 
-				// socket create and verification
-				sockfd = socket(AF_INET, SOCK_STREAM, 0);
-				if (sockfd == -1) {
-					printf("criacao do socket falhou...\n");
-					exit(0);
-				}
-				else
-					printf("socket criado com sucesso..\n");
-				bzero(&servaddr, sizeof(servaddr));
+				  // socket create and verification
+				  sockfd = socket(AF_INET, SOCK_STREAM, 0);
+				  if (sockfd == -1) {
+					  printf("criacao do socket falhou...\n");
+					  exit(0);
+				  }
+				  else
+					  printf("socket criado com sucesso..\n");
+				  bzero(&servaddr, sizeof(servaddr));
 
 				// assign IP, PORT
 				servaddr.sin_family = AF_INET;
@@ -223,15 +224,37 @@ int main(int argc, char *argv[])
 				}
 				else
 				printf("o servidor TCP aceitou o cliente TCP...\n");
-				// FIM DO TCP
+				// FIM DO TCP     
 				
+        // envio de mensagem de 'terminei' multicast       
+        char *message = "terminei do servidor";
+       
+        //for (i=0;i<1;i++) { // numero de mensagens enviadas
+				  ch = 0;
+				  nbytes = sendto(
+					  fd,
+					  message,
+					  strlen(message),
+					  0,
+					  (struct sockaddr*) &addr,
+					  sizeof(addr)
+				  );
+				  if (nbytes < 0) {
+					  perror("sendto");
+					  return 1;
+				  }				
+			  //}        
+        
 				// TCP 
 				// Function for chatting between client and server
 				func(connfd);
+        
 
+        
+        
 				// After chatting close the socket
-				close(sockfd);				
-			  
+				close(sockfd);        
+  
 			}
 			j = 0;
         }       
@@ -248,6 +271,5 @@ int main(int argc, char *argv[])
     //
     WSACleanup();
 #endif
-
     return 0;
 }
