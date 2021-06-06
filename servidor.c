@@ -188,13 +188,13 @@ int main(int argc, char *argv[])
 
         // envia o ack do servidor para o orquestrador e cria o socket TCP
         m->origem = SERVIDOR;
-        int nbytes = sendto(fd,
-                            msgbuf,
-                            TAMANHO_DA_MENSAGEM,
-                            0,
-                            (struct sockaddr*) &addr,
-                            sizeof(addr)
-                            );
+        nbytes = sendto(fd,
+                        msgbuf,
+                        TAMANHO_DA_MENSAGEM,
+                        0,
+                        (struct sockaddr*) &addr,
+                        sizeof(addr)
+                        );
         if (nbytes < 0) {
             perror("sendto ack dispara");
             return 1;
