@@ -24,8 +24,7 @@
 #define SA struct sockaddr
 
 //TCP
-// Function designed for chat between client and server.
-void func(int sockfd)
+void teste(int sockfd)
 {
 	char buff[MAX];
 	int n, i;
@@ -249,7 +248,7 @@ int main(int argc, char *argv[])
 
                 // TCP
                 // Function for chatting between client and server
-                func(connfd);
+                teste(connfd);
 
 
 

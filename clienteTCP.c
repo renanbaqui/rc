@@ -16,7 +16,7 @@ char mensagem[MAX];
 
 int byte_count;
 
-void func(int sockfd, int tamanho, int repeticoes)
+void teste(int sockfd, int tamanho, int repeticoes)
 {	
   
   int i, n;
@@ -106,7 +106,7 @@ int main()
   gettimeofday(&start, NULL); // inicio da contagem do tempo
   
 	// function for chat
-	func(sockfd, 16, 16);				// loop enviando uma mensagem com um tamanho configurado, aguardando a resposta, calculando o tempo de RTT?
+	teste(sockfd, 16, 16);				// loop enviando uma mensagem com um tamanho configurado, aguardando a resposta, calculando o tempo de RTT?
 						                  // criar outro loop? - ao iniciar, o cliente fica aguardando uma mensagem de multicast do orquestrador.
 
   gettimeofday(&end, NULL);  // fim da contagem do tempo  
