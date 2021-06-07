@@ -253,6 +253,10 @@ int main(int argc, char *argv[])
 
         m->tipo = EXITO;
 
+        // O orquestrador interpreta repetições aqui como status de retorno
+        // retorna "OK"
+        m->repeticoes = 0;
+
         nbytes = sendto(fd,
                         msgbuf,
                         TAMANHO_DA_MENSAGEM,
