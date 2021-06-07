@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
         // Cria o socket TCP
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
         if (sockfd == -1) {
-            printf("criacao do socket falhou...\n");
+            printf("criacao do socket falhou...");
             exit(0);
         } else {
             printf("socket criado com sucesso..\n");
@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
 
         // Binding newly created socket to given IP and verification
         if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
-            printf("vinculo do socket falhou...\n");
+            perror("vinculo do socket falhou...\n");
             exit(0);
         } else {
             printf("socket vinculado com sucesso..\n");
