@@ -202,6 +202,7 @@ int main(int argc, char *argv[])
             printf("socket criado com sucesso..\n");
         }
 
+        setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char*) &yes, sizeof(yes));
 
         // Binding newly created socket to given IP and verification
         if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
