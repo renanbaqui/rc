@@ -21,7 +21,7 @@
 // TCP
 #include <netdb.h>
 #define MAX 65536  // define tamanho maximo TCP
-#define PORT 8080  // definicao de porta TCP
+#define PORT 8822  // definicao de porta TCP
 #define SA struct sockaddr
 
 //TCP
