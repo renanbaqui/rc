@@ -42,8 +42,9 @@ void teste(int sockfd, mensagem_t* m_dispara)
 
         mensagem_t* m = (mensagem_t*) msgbuff;
 
-        printf("mensagem %d/%d do cliente TCP: tipo %x origem %x tamanho %x repetições %x\t",
-               i,
+        printf("mensagem %d/%d do cliente TCP: "
+               "tipo %x origem %x tamanho %x repetições %x\n",
+               i+1,
                r,
                m->tipo,
                m->origem,
