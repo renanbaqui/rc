@@ -36,7 +36,6 @@ void teste(int sockfd, mensagem_t* m_dispara)
 
     for (i=0; i < r; i++) {
 
-        bzero(msgbuff, MAX); // zera o buffer
 
         read(sockfd, msgbuff, t);
 
