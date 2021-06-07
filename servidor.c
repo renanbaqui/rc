@@ -241,6 +241,7 @@ int main(int argc, char *argv[])
         teste(connfd, m);
 
 
+        close(connfd);
         // After chatting close the socket
         close(sockfd);
 
