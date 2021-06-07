@@ -147,8 +147,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // now just enter a read-print loop
-    //
     printf("servidor aguardando mensagem multicast do orquestrador...\n");
     while (1) {
         char msgbuf[MSGBUFSIZE];
