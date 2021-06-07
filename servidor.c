@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = htonl(INADDR_ANY); // differs from sender
+    addr.sin_addr.s_addr = inet_addr(group); // differs from sender
     addr.sin_port = htons(port);
 
     // bind to receive address
