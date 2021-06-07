@@ -177,20 +177,6 @@ int main(int argc, char *argv[])
             return -1;
         }
 
-        // envia o ack do servidor para o orquestrador e cria o socket TCP
-        m->origem = SERVIDOR;
-        nbytes = sendto(fd,
-                        msgbuf,
-                        TAMANHO_DA_MENSAGEM,
-                        0,
-                        (struct sockaddr*) &addr,
-                        sizeof(addr)
-                        );
-        if (nbytes < 0) {
-            perror("sendto ack dispara");
-            return 1;
-        }
-
         ///////////////////
         // TCP (teste)
 
@@ -228,6 +214,19 @@ int main(int argc, char *argv[])
             printf("servidor TCP escutando...\n");
         }
         len = sizeof(cli);
+
+        // envia o ack do servidor para o orquestrador
+        nbytes = sendto(fd,
+                        msgbuf,
+                        TAMANHO_DA_MENSAGEM,
+                        0,
+                        (struct sockaddr*) &addr,
+                        sizeof(addr)
+                        );
+        if (nbytes < 0) {
+            perror("sendto ack dispara");
+            return 1;
+        }
 
         // Accept the data packet from client and verification
         connfd = accept(sockfd, (SA*)&cli, &len);
