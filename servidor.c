@@ -36,8 +36,10 @@ void teste(int sockfd, mensagem_t* m_dispara)
 
     for (i=0; i < r; i++) {
 
-
-        read(sockfd, msgbuff, t);
+        int read_bytes = 0;
+        while (read_bytes < t){
+            read_bytes += read(sockfd, msgbuff + read_bytes, t - read_bytes);
+        }
 
         mensagem_t* m = (mensagem_t*) msgbuff;
 
@@ -51,7 +53,10 @@ void teste(int sockfd, mensagem_t* m_dispara)
                m->repeticoes);
 
         m->origem = SERVIDOR;
-        write(sockfd, msgbuff, t);  // responde com um eco da mensagem recebida
+        int sent_bytes = 0;
+        while (sent_bytes < t){
+            sent_bytes += write(sockfd, msgbuff + sent_bytes, t - sent_bytes);  // responde com um eco da mensagem recebida
+        }
     }
 }
 
