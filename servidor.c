@@ -62,9 +62,6 @@ void teste(int sockfd, mensagem_t* m_dispara)
 int main(int argc, char *argv[])
 {
     // INICIO DO UDP
-    int i=0, j=1;
-    
-    char *message = "ack do servidor";
     
     if (argc != 3) {
        printf("Command line args should be multicast group and port\n");
