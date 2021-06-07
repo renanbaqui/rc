@@ -51,7 +51,7 @@ void teste(int sockfd, mensagem_t* m_dispara)
                m->repeticoes);
 
         m->origem = SERVIDOR;
-        write(sockfd, msgbuff, sizeof(msgbuff));  // responde com um eco da mensagem recebida
+        write(sockfd, msgbuff, t);  // responde com um eco da mensagem recebida
     }
 }
 
