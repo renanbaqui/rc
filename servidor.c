@@ -43,14 +43,14 @@ void teste(int sockfd, mensagem_t* m_dispara)
 
         mensagem_t* m = (mensagem_t*) msgbuff;
 
-        printf("mensagem %d/%d do cliente TCP: "
-               "tipo %x origem %x tamanho %x repetições %x\n",
-               i+1,
-               r,
-               m->tipo,
-               m->origem,
-               m->tamanho,
-               m->repeticoes);
+        // printf("mensagem %d/%d do cliente TCP: "
+        //        "tipo %x origem %x tamanho %x repetições %x\n",
+        //        i+1,
+        //        r,
+        //        m->tipo,
+        //        m->origem,
+        //        m->tamanho,
+        //        m->repeticoes);
 
         m->origem = SERVIDOR;
         int sent_bytes = 0;
@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
             printf("criacao do socket falhou...");
             exit(0);
         } else {
-            printf("socket criado com sucesso..\n");
+            //printf("socket criado com sucesso..\n");
         }
 
         setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char*) &yes, sizeof(yes));
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
             perror("vinculo do socket falhou...\n");
             exit(0);
         } else {
-            printf("socket vinculado com sucesso..\n");
+            //printf("socket vinculado com sucesso..\n");
         }
 
         // Now server is ready to listen and verification
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
             printf("escuta do servidor TCP falhou...\n");
             exit(0);
         } else {
-            printf("servidor TCP escutando...\n");
+            //printf("servidor TCP escutando...\n");
         }
         len = sizeof(cli);
 
