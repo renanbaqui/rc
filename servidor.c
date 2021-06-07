@@ -221,6 +221,7 @@ int main(int argc, char *argv[])
         }
         len = sizeof(cli);
 
+        m->origem = SERVIDOR;
         // envia o ack do servidor para o orquestrador
         nbytes = sendto(fd,
                         msgbuf,
